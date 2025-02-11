@@ -47,9 +47,6 @@ TEST_DS="[/n/holylfs06/LABS/kempner_shared/Everyone/workflow/sft_llm/nemo_data/d
 VALID_NAMES="ndatabricks-dolly-15k"
 OUTPUT_DIR="./sft-output-test"
 
-
-#CONCAT_SAMPLING_PROBS="[0.3,0.7]"
-
 echo $NNODES $GPUS_NODE
 
 echo $CMD
