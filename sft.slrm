@@ -84,7 +84,7 @@ echo "=================== Launching JoB ================="
 
 export SINGULARITY_BIND="/etc/nsswitch.conf,/etc/slurm,/lib64/libnss_sss.so.2:/lib/libnss_sss.so.2,/run/munge,/slurm,/usr/bin/sacct,/usr/bin/salloc,/usr/bin/sbatch,/usr/bin/scancel,/usr/bin/scontrol,/usr/bin/scrontab,/usr/bin/seff,/usr/bin/sinfo,/usr/bin/squeue,/usr/bin/srun,/usr/bin/sshare,/usr/bin/sstat,/usr/bin/strace,/usr/lib64/libmunge.so.2,/usr/lib64/slurm,/var/lib/sss,/etc/pki/ca-trust/extracted/pem/,/sys,/etc/ssl/certs/,/usr/lib64/pmix,"
 
-container_file="/n/netscratch/kempner_dev/bdesinghu/container_images/nemo-25.02.rc0.simg/nemo-25.02.rc0.simg"
+container_file="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo-25.02.rc0.simg"
 srun -l singularity run --nv $container_file $cmd 
 echo "=================== Finished JoB ================="
 
