@@ -1,8 +1,8 @@
 # nvidia-nemo-workflows
 
-## Distributed Finetunning
+## Finetuning
 
-We will describe distributted finetuning of Llama3 (8B and 70B) models with NeMo framework. We will explore how to do full finetuning and pefermance efficient finetunning using the Tensor and Pipeline parallel approaches. Later we will also see the use of fully sharded data parallel applications for the finetuning large models. 
+We will describe distributted finetuning of Llama3 (8B and 70B) models with NeMo framework. We will explore how to do full finetuning and pefermance efficient finetuning using the Tensor and Pipeline parallel approaches. Later we will also see the use of fully sharded data parallel applications for the finetuning large models. 
 
 1. LoRA 
 2. QLoRA
@@ -13,7 +13,7 @@ Our examples cover the following datasets, models, and parallism approaches.
   * Models: Llama3-8B, Llama3-70B
   * Parallelism: Tensor, Pipeline, and Fully Sharded Data Parallel
    
-## Distributed Pretraining
+## Pretraining
 
 Here we will start with GPT2 model and try up 3B models. 
 
