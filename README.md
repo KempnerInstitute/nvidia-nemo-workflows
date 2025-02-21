@@ -20,4 +20,6 @@ Here we will start with GPT2 model and try up 3B models.
 Our examples cover the following datasets, models, and parallism approaches. 
  * Data: codeparrot, wikitext
  * Models: GPT2, Nemotron
- *  Parallelism: Tensor, Pipeline, and Fully Sharded Data Parallel
+ * Parallelism: Tensor, Pipeline, and Fully Sharded Data Parallel
+
+
