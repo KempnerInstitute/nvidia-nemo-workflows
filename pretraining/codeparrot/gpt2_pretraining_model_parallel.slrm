@@ -1,13 +1,13 @@
 #!/bin/bash
-#SBATCH --job-name="n1-meg"     # a name for your job
+#SBATCH --job-name="gpt-meg"     # a name for your job
 #SBATCH --partition=kempner_h100
-#SBATCH --account=kempner_dev
+#SBATCH --account=<account-name>
 #SBATCH --nodes=8                         # node count
 #SBATCH --ntasks-per-node=4      # total number of tasks across all nodes
-#SBATCH --time=00:35:00                           # total run time limit (HH:MM:SS)
 #SBATCH --gpus-per-node=4                      # Number of GPUs per node (4 per node)
 #SBATCH --cpus-per-task=24
-#SBATCH --mem=64GB
+#SBATCH --mem=0
+#SBATCH --time=00:35:00                           # total run time limit (HH:MM:SS)
 #SBATCH --output %x_%N_%j.out           # Output file
 #SBATCH --error %x_%N_%j.out             # Error file
 
@@ -101,7 +101,7 @@ python /opt/NeMo/examples/nlp/language_modeling/megatron_gpt_pretraining.py \
 echo $CMD
 
 echo "=================== Launching JoB ================="
-container_file="/n/netscratch/kempner_dev/bdesinghu/container_images/nemo-25.02.rc0.simg"
+container_file="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo-25.02.rc0.simg"
 srun -l singularity run --nv $container_file $CMD
 
 echo "=================== Finished JoB ================="
