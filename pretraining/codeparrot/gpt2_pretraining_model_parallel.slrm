@@ -2,9 +2,9 @@
 #SBATCH --job-name="n1-meg"     # a name for your job
 #SBATCH --partition=kempner_h100
 #SBATCH --account=kempner_dev
-#SBATCH --nodes=2                         # node count
+#SBATCH --nodes=8                         # node count
 #SBATCH --ntasks-per-node=4      # total number of tasks across all nodes
-#SBATCH --time=00:15:00                           # total run time limit (HH:MM:SS)
+#SBATCH --time=00:35:00                           # total run time limit (HH:MM:SS)
 #SBATCH --gpus-per-node=4                      # Number of GPUs per node (4 per node)
 #SBATCH --cpus-per-task=24
 #SBATCH --mem=64GB
@@ -18,18 +18,18 @@ NODE_RANK=0
 WORLD_SIZE=$(($GPUS_NODE*$NNODES))
 world_size=$(($GPUS_NODE*$NNODES))
 export TP_SIZE=4
-export PP_SIZE=2
+export PP_SIZE=8
 
 
 module purge
+module load cuda/12.4.1-fasrc01
+module load cudnn/9.5.1.17_cuda12-fasrc01
 
-src_pth="/n/holylfs06/LABS/kempner_shared/Everyone/common_envs/miniconda3/envs/mega_ml"
-data_pth="/n/holylfs06/LABS/kempner_shared/Everyone/common_envs/miniconda3/envs/mega_ml/Megatron-LM/data"
+data_pth="/n/holylfs06/LABS/kempner_shared/Everyone/workflow/nemo_pretrain_data/"
 
-env | grep -i python
 
 export CUDA_DEVICE_MAX_CONNECTIONS=1
-#export HYDRA_FULL_ERROR=1
+export HYDRA_FULL_ERROR=1
 
 nodes=( $( scontrol show hostnames $SLURM_JOB_NODELIST ) )
 nodes_array=($nodes)
@@ -59,8 +59,8 @@ python /opt/NeMo/examples/nlp/language_modeling/megatron_gpt_pretraining.py \
     --config-path=/opt/NeMo/examples/nlp/language_modeling/conf \
     --config-name=megatron_gpt_config.yaml \
     trainer.devices=4 \
-    trainer.num_nodes=2 \
-    trainer.max_epochs=2 \
+    trainer.num_nodes=8 \
+    trainer.max_epochs=10 \
     trainer.max_steps=3000 \
     trainer.val_check_interval=300 \
     trainer.log_every_n_steps=50 \
