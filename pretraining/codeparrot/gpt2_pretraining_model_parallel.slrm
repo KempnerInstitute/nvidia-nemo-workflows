@@ -53,8 +53,8 @@ export CMD="
 python /opt/NeMo/examples/nlp/language_modeling/megatron_gpt_pretraining.py \
     --config-path=/opt/NeMo/examples/nlp/language_modeling/conf \
     --config-name=megatron_gpt_config.yaml \
-    trainer.devices=4 \
-    trainer.num_nodes=8 \
+    trainer.devices=$GPUS_NODE \
+    trainer.num_nodes=$NNODE \
     trainer.max_epochs=10 \
     trainer.max_steps=3000 \
     trainer.val_check_interval=300 \
