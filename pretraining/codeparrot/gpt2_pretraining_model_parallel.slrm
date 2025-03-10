@@ -21,10 +21,6 @@ export TP_SIZE=4
 export PP_SIZE=8
 
 
-module purge
-module load cuda/12.4.1-fasrc01
-module load cudnn/9.5.1.17_cuda12-fasrc01
-
 data_pth="/n/holylfs06/LABS/kempner_shared/Everyone/workflow/nemo_pretrain_data/"
 
 
