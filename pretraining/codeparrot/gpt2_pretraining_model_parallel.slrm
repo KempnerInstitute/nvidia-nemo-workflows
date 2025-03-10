@@ -1,13 +1,13 @@
 #!/bin/bash
-#SBATCH --job-name="n1-meg"     # a name for your job
+#SBATCH --job-name="gpt-meg"     # a name for your job
 #SBATCH --partition=kempner_h100
-#SBATCH --account=kempner_dev
-#SBATCH --nodes=2                         # node count
+#SBATCH --account=<account-name>
+#SBATCH --nodes=8                         # node count
 #SBATCH --ntasks-per-node=4      # total number of tasks across all nodes
-#SBATCH --time=00:15:00                           # total run time limit (HH:MM:SS)
 #SBATCH --gpus-per-node=4                      # Number of GPUs per node (4 per node)
 #SBATCH --cpus-per-task=24
-#SBATCH --mem=64GB
+#SBATCH --mem=0
+#SBATCH --time=00:35:00                           # total run time limit (HH:MM:SS)
 #SBATCH --output %x_%N_%j.out           # Output file
 #SBATCH --error %x_%N_%j.out             # Error file
 
@@ -18,18 +18,14 @@ NODE_RANK=0
 WORLD_SIZE=$(($GPUS_NODE*$NNODES))
 world_size=$(($GPUS_NODE*$NNODES))
 export TP_SIZE=4
-export PP_SIZE=2
+export PP_SIZE=8
 
 
-module purge
+data_pth="/n/holylfs06/LABS/kempner_shared/Everyone/workflow/nemo_pretrain_data/"
 
-src_pth="/n/holylfs06/LABS/kempner_shared/Everyone/common_envs/miniconda3/envs/mega_ml"
-data_pth="/n/holylfs06/LABS/kempner_shared/Everyone/common_envs/miniconda3/envs/mega_ml/Megatron-LM/data"
-
-env | grep -i python
 
 export CUDA_DEVICE_MAX_CONNECTIONS=1
-#export HYDRA_FULL_ERROR=1
+export HYDRA_FULL_ERROR=1
 
 nodes=( $( scontrol show hostnames $SLURM_JOB_NODELIST ) )
 nodes_array=($nodes)
@@ -44,7 +40,6 @@ export MASTER_PORT=$head_port
 echo "MASTER_ADDR MASTER_PORT WORLD_SIZE"
 echo $MASTER_ADDR $MASTER_PORT $WORLD_SIZE
 
-DISTRIBUTED_ARGS="--nproc_per_node $GPUS_NODE --nnodes $NNODES  --master_addr $head_node_ip --master_port $head_port"
 
 CHECKPOINT_PATH=./model_checkpoint
 VOCAB_FILE=$data_pth/gpt2-vocab.json
@@ -58,9 +53,9 @@ export CMD="
 python /opt/NeMo/examples/nlp/language_modeling/megatron_gpt_pretraining.py \
     --config-path=/opt/NeMo/examples/nlp/language_modeling/conf \
     --config-name=megatron_gpt_config.yaml \
-    trainer.devices=4 \
-    trainer.num_nodes=2 \
-    trainer.max_epochs=2 \
+    trainer.devices=$GPUS_NODE \
+    trainer.num_nodes=$NNODE \
+    trainer.max_epochs=10 \
     trainer.max_steps=3000 \
     trainer.val_check_interval=300 \
     trainer.log_every_n_steps=50 \
@@ -106,7 +101,7 @@ python /opt/NeMo/examples/nlp/language_modeling/megatron_gpt_pretraining.py \
 echo $CMD
 
 echo "=================== Launching JoB ================="
-container_file="/n/netscratch/kempner_dev/bdesinghu/container_images/nemo-25.02.rc0.simg"
+container_file="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo-25.02.rc0.simg"
 srun -l singularity run --nv $container_file $CMD
 
 echo "=================== Finished JoB ================="
