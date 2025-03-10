@@ -4,7 +4,6 @@
 #SBATCH --account=<account-name>
 #SBATCH --nodes=8                         # node count
 #SBATCH --ntasks-per-node=4      # total number of tasks across all nodes
-#SBATCH --time=00:35:00                           # total run time limit (HH:MM:SS)
 #SBATCH --gpus-per-node=4                      # Number of GPUs per node (4 per node)
 #SBATCH --cpus-per-task=24
 #SBATCH --mem=0
