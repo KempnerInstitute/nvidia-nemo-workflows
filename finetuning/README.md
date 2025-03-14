@@ -1,8 +1,15 @@
 
-# finetuning
+# Fine-Tuning
 
-We will consider finetuning Llama3 8B and 70B models with Full tuning, LoRA, and p-tuning appraches. For 
-these examples, we will consider `dolly-15k` and `pubmedqa` datasets. 
+We will fine-tune **Llama3 8B** and **Llama3 70B** models using **full tuning, LoRA, and p-tuning** approaches. For these examples, we will use the `dolly-15k` and `pubmedqa` datasets.  
+
+Each fine-tuning job is defined in a **Slurm job script** located within the respective directory. For example:  
+
+- `full/sft_full_llama3-70b_dolly15k.slrm` is the Slurm script for **supervised fine-tuning (SFT) of the Llama3 70B model** on the `dolly-15k` dataset.  
+
+Below are key variables that should be customized when running the job.  
+
+
 
 ## PEFT Scheme
 
