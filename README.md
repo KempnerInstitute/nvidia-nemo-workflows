@@ -7,7 +7,7 @@ NeMo can be installed using either Conda or the NGC container, with the latter b
 /n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo-25.02.rc0.simg
 ```
 
-It is recommended to mount volumes before launching a job. This can be done by specifying Singularity bind options by passing bind options directly when launching the container or predefining them using the SINGULARITY_BIND environment variable. To ensure the necessary bindings are set, export the SINGULARITY_BIND variable either in your shell or within the Slurm job script.
+It is recommended to mount volumes before launching a job. This can be done by specifying Singularity bind options by passing bind options directly when launching the container or predefining them using the SINGULARITY_BIND environment variable. To ensure the necessary bindings are set, export the SINGULARITY_BIND variable in your shell, add to your `.bashrc` file or within the Slurm job script.
 
 ```
 export SINGULARITY_BIND="/etc/nsswitch.conf,/etc/slurm,/lib64/libnss_sss.so.2:/lib/libnss_sss.so.2,/var/run/munge:/run/munge,/slurm,/usr/bin/sacct,/usr/bin/salloc,/usr/bin/sbatch,/usr/bin/scancel,/usr/bin/scontrol,/usr/bin/scrontab,/usr/bin/seff,/usr/bin/sinfo,/usr/bin/squeue,/usr/bin/srun,/usr/bin/sshare,/usr/bin/sstat,/usr/bin/strace,/usr/lib64/libmunge.so.2,/usr/lib64/slurm,/var/lib/sss,/etc/pki/ca-trust/extracted/pem/,/sys,/etc/ssl/certs/,/usr/lib64/pmix,"
