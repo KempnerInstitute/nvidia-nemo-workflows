@@ -38,7 +38,7 @@ echo "WORLD_SIZE=$world_size"
 
 
 data_pth="/n/holylfs06/LABS/kempner_shared/Everyone/workflow/sft_llm/nemo_data/biomed-qa/pubmedqa/data/"
-model_pth="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo_files/model/"
+model_pth="/n/holylfs06/LABS/kempner_shared/Everyone/workflow/nemo/model"
 MODEL="$model_pth/llama3-70b.nemo"
 TRAIN_DS="[$data_pth/pubmedqa_train.jsonl]"
 VALID_DS="[$data_pth/pubmedqa_val.jsonl]"
