@@ -38,7 +38,7 @@ echo "WORLD_SIZE=$world_size"
 
 
 data_pth="/n/holylfs06/LABS/kempner_shared/Everyone/workflow/sft_llm/nemo_data/databricks-dolly-15k"
-model_pth="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo_files/model/"
+model_pth="/n/holylfs06/LABS/kempner_shared/Everyone/workflow/nemo/model"
 MODEL="$model_pth/llama3-70b.nemo"
 TRAIN_DS="[$data_pth/training.jsonl]"
 VALID_DS="[$data_pth/validation.jsonl]"
@@ -81,8 +81,7 @@ echo $cmd
 
 env 
 echo "=================== Launching JoB ================="
-
-container_file="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo-25.02.rc0.simg"
+container_file="/n/holylfs06/LABS/kempner_shared/Everyone/workflow/nemo/singularity_image/nemo-25.02.rc0.simg"
 srun singularity run --nv $container_file $cmd 
 
 echo "=================== Finished JoB ================="
