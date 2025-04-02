@@ -1,22 +1,25 @@
 #!/bin/bash
-#SBATCH --job-name="sft-lora"     # a name for your job
-#SBATCH --partition=<partition>    partition to which job should be submitted
-#SBATCH --account=<account>     
-#SBATCH --nodes=4                                 # node count
-#SBATCH --ntasks-per-node=2                                # total number of tasks across all nodes
-#SBATCH --time=01:30:00                           # total run time limit (HH:MM:SS)
-#SBATCH --gpus-per-node=2                      # Number of GPUs per node (4 per node)
+#SBATCH --job-name="n2-lora"       # a name for your job
+#SBATCH --partition=               # <---- partition to which job should be submitted
+#SBATCH --account=                 # <---- account to which job should be charged     
+#SBATCH --nodes=1                  # node count
+#SBATCH --ntasks-per-node=4        # total number of tasks across all nodes
+#SBATCH --time=01:30:00            # total run time limit (HH:MM:SS)
+#SBATCH --gpus-per-node=4          # Number of GPUs per node (4 per node)
 #SBATCH --cpus-per-task=16
-#SBATCH --mem=64GB                              
-#SBATCH --output %x_%N_%j.out           # Output file
-#SBATCH --error %x_%N_%j.out             # Error file
+#SBATCH --mem=0
+#SBATCH --output %x_%N_%j.out      # Output file
+#SBATCH --error %x_%N_%j.out       # Error file
+
+export SINGULARITY_BIND="/etc/nsswitch.conf,/etc/slurm,/lib64/libnss_sss.so.2:/lib/libnss_sss.so.2,/var/run/munge:/run/munge,/slurm,/usr/bin/sacct,/usr/bin/salloc,/usr/bin/sbatch,/usr/bin/scancel,/usr/bin/scontrol,/usr/bin/scrontab,/usr/bin/seff,/usr/bin/sinfo,/usr/bin/squeue,/usr/bin/srun,/usr/bin/sshare,/usr/bin/sstat,/usr/bin/strace,/usr/lib64/libmunge.so.2,/usr/lib64/slurm,/var/lib/sss,/etc/pki/ca-trust/extracted/pem/,/sys,/usr/lib64/pmix,/etc/pki/tls/certs/:/etc/ssl/certs/"
+
 
 export GPUS_NODE=$SLURM_NTASKS_PER_NODE
 export NNODES=$SLURM_NNODES
 export SCHEME="lora"
 CONCAT_SAMPLING_PROBS="[1]"
-export TP_SIZE=2
-export PP_SIZE=4
+export TP_SIZE=4
+export PP_SIZE=1
 
 export NCCL_DEBUG=WARN
 nodes=( $( scontrol show hostnames $SLURM_JOB_NODELIST ) )
@@ -37,13 +40,13 @@ echo $MASTER_ADDR $MASTER_PORT
 echo "WORLD_SIZE=$world_size"
 
 
-data_pth="/n/holylfs06/LABS/kempner_shared/Everyone/workflow/sft_llm/nemo_data/databricks-dolly-15k"
+data_pth="/n/holylfs06/LABS/kempner_shared/Everyone/workflow/sft_llm/nemo_data/biomed-qa/pubmedqa/data/"
 model_pth="/n/holylfs06/LABS/kempner_shared/Everyone/workflow/nemo/model"
-MODEL="$model_pth/llama-3-8b-instruct-nemo_v1.0/8b_instruct_nemo_bf16.nemo"
-TRAIN_DS="[$data_pth/training.jsonl]"
-VALID_DS="[$data_pth/validation.jsonl]"
-TEST_DS="[$data_pth/test.jsonl]"
-VALID_NAMES="databricks-dolly"
+MODEL="$model_pth/llama3-70b.nemo"
+TRAIN_DS="[$data_pth/pubmedqa_train.jsonl]"
+VALID_DS="[$data_pth/pubmedqa_val.jsonl]"
+TEST_DS="[$data_pth/pubmedqa_test.jsonl]"
+VALID_NAMES="nbiomed-qa"
 OUTPUT_DIR="./sft-output-test"
 
 
@@ -85,5 +88,5 @@ echo "=================== Launching JoB ================="
 container_file="/n/holylfs06/LABS/kempner_shared/Everyone/workflow/nemo/singularity_image/nemo-25.02.rc0.simg"
 srun singularity run --nv $container_file $cmd 
 
-echo "=================== Finished JoB ================="
+echo "=================== Finished JoB =================="
 

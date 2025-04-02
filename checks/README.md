@@ -1,6 +1,10 @@
 # Checks
 
-A successful workflow run depends on a wide range of configuration parameters, including authentication tokens, dataset paths, container bindings, SLURM resource requests, and environment variables. Misconfigurations in any of these can cause the job to fail or behave unexpectedly. This section outlines common pitfalls and provides lightweight shell scripts and SLURM job examples to help verify the setup. These preflight checks are designed to catch basic issues early through dry runs or minimal resource submissions, ensuring the environment is correctly configured before launching full-scale jobs.
+A successful workflow run depends on a wide range of configuration parameters, including authentication tokens, dataset paths, container bindings, SLURM resource requests, and environment variables. Misconfigurations in any of these can cause the job to fail or behave unexpectedly. This section outlines common pitfalls and provides lightweight shell scripts and SLURM job examples to help verify the setup. These preflight checks are designed to catch basic issues early through dry runs or minimal resource submissions, ensuring the environment is correctly configured before launching full-scale jobs. 
+
+
+> [!NOTE]
+> Most of the following issues happen when the `.nemo` file of the model is not available on the cluster and the model is downloaded from HuggingFace. If you have the `.nemo` file, please use it instead of downloading the model from HuggingFace. In the workflow, we have provided the `.nemo` file for the models. 
 
 
 ## SSL Certificate Errors
