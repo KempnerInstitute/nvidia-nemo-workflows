@@ -37,23 +37,23 @@ NeMo provides a variety of workflows for different tasks, including: Data Curati
 
 | Workflow Name                   | Model                                                              | Dataset     |
 |---------------------------------|--------------------------------------------------------------------|-------------|
-| [gpt2_pretraining_codeparrot]() | [Megatron GPT2](https://huggingface.co/nvidia/megatron-gpt2-345m)  | [CodeParrot](https://huggingface.co/codeparrot)  |
+| [gpt2_pretraining_codeparrot](pretraining/gpt2_pretraining_codeparrot) | [Megatron GPT2](https://huggingface.co/nvidia/megatron-gpt2-345m)  | [CodeParrot](https://huggingface.co/codeparrot)  |
 
 
 ### Finetuning
 
-| Type       | Workflow Name                         | Model          | Dataset        |
-|------------|---------------------------------------|----------------|----------------|
-| Full       | [sft_full_llama3-70b_dolly15k]()      | [LLaMA3-70B]() | [dolly15k]()   |
-| Full       | [sft_full_llama3-70b_pubmedqa]()      | [LLaMA3-70B]() | [pubmedqa]()   |
-| Full       | [sft_full_llama3-8b_dolly15k]()       | [LLaMA3-8B]()  | [dolly15k]()   |
-| Full       | [sft_full_llama3-8b_pubmedqa]()       | [LLaMA3-8B]()  | [pubmedqa]()   |
-| LoRA       | [sft_lora_llama3-70b_dolly15k]()      | [LLaMA3-70B]() | [dolly15k]()   |
-| LoRA       | [sft_lora_llama3-70b_pubmedqa]()      | [LLaMA3-70B]() | [pubmedqa]()   |
-| LoRA       | [sft_lora_llama3-8b_dolly15k]()       | [LLaMA3-8B]()  | [dolly15k]()   |
-| LoRA       | [sft_lora_llama3-8b_pubmedqa]()       | [LLaMA3-8B]()  | [pubmedqa]()   |
-| P-Tuning   | [ptuning_llama3-70b_dolly15k]()       | [LLaMA3-70B]() | [dolly15k]()   |
-| P-Tuning   | [ptuning_llama3-8b_dolly15k]()        | [LLaMA3-8B]()  | [dolly15k]()   |
+| Type       | Workflow Name                                                                  | Model       | Dataset   |
+|------------|--------------------------------------------------------------------------------|-------------|-----------|
+| Full       | [sft_full_llama3-70b_dolly15k](finetuning/full/sft_full_llama3-70b_dolly15k)   | LLaMA3-70B  | dolly15k  |
+| Full       | [sft_full_llama3-70b_pubmedqa](finetuning/full/sft_full_llama3-70b_pubmedqa)   | LLaMA3-70B  | pubmedqa  |
+| Full       | [sft_full_llama3-8b_dolly15k](finetuning/full/sft_full_llama3-8b_dolly15k)     | LLaMA3-8B   | dolly15k  |
+| Full       | [sft_full_llama3-8b_pubmedqa](finetuning/full/sft_full_llama3-8b_pubmedqa)     | LLaMA3-8B   | pubmedqa  |
+| LoRA       | [sft_lora_llama3-70b_dolly15k](finetuning/lora/sft_lora_llama3-70b_dolly15k)   | LLaMA3-70B  | dolly15k  |
+| LoRA       | [sft_lora_llama3-70b_pubmedqa](finetuning/lora/sft_lora_llama3-70b_pubmedqa)   | LLaMA3-70B  | pubmedqa  |
+| LoRA       | [sft_lora_llama3-8b_dolly15k](finetuning/lora/sft_lora_llama3-8b_dolly15k)     | LLaMA3-8B   | dolly15k  |
+| LoRA       | [sft_lora_llama3-8b_pubmedqa](finetuning/lora/sft_lora_llama3-8b_pubmedqa)     | LLaMA3-8B   | pubmedqa  |
+| P-Tuning   | [ptuning_llama3-70b_dolly15k](finetuning/p-tuning/ptuning_llama3-70b_dolly15k) | LLaMA3-70B  | dolly15k  |
+| P-Tuning   | [ptuning_llama3-8b_dolly15k](finetuning/p-tuning/ptuning_llama3-8b_dolly15k)   | LLaMA3-8B   | dolly15k  |
 
 
 ## Available Singularity Images
