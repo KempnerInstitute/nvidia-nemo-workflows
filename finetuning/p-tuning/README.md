@@ -21,8 +21,6 @@ NeMo implements this approach using the `model.peft.peft_scheme=ptuning` option.
 
 ---
 
----
-
 ## SLURM Job Script 
 
 
