@@ -1,4 +1,4 @@
-# P-Tuning of LLaMA3-8B and LLaMA3-70B on Dolly15K (NeMo Workflow)
+# P-Tuning 
 
 This directory contains a reproducible setup for fine-tuning the **LLaMA3-70B** and **LLaMA3-8B** models using **P-Tuning v2** on the **Databricks Dolly-15k** dataset with NVIDIA NeMo.
 
