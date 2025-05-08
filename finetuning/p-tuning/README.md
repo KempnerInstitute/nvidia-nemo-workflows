@@ -1,6 +1,6 @@
 # P-Tuning 
 
-This directory contains a reproducible setup for fine-tuning the **LLaMA3-70B** and **LLaMA3-8B** models using **P-Tuning v2** on the **Databricks Dolly-15k** dataset with NVIDIA NeMo.
+This directory contains the Slurm job setup for fine-tuning the **LLaMA3-70B** and **LLaMA3-8B** models using **P-Tuning v2** on the **Databricks Dolly-15k** dataset with NVIDIA NeMo.
 
 Fine-tuning is executed on a SLURM-managed multi-node GPU cluster using a Singularity container.
 
@@ -33,6 +33,12 @@ cd ptuning_llama3-70b_dolly15k
 sbatch ptuning_llama3-70b_dolly15k.slrm 
 ```
 
+Similary launch the p-tuning of Llama3 8B, 
+
+```bash
+cd ptuning_llama3-8b_dolly15k
+sbatch ptuning_llama3-8b_dolly15k.slrm 
+```
 
 ---
 
