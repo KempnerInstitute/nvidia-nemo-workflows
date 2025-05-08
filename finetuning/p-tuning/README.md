@@ -15,7 +15,7 @@ NeMo implements this approach using the `model.peft.peft_scheme=ptuning` option.
 ---
 
 ##  Requirements
-  - Pretrained NeMo LLaMA3 model (`llama3-70b.nemo`)
+  - Pretrained NeMo LLaMA3 model (`llama3-70b.nemo` and `llama3-8b.nemo`)
   - Dolly-15K JSONL dataset: `training.jsonl`, `validation.jsonl`, `test.jsonl`
   - NeMo Singularity image: `nemo-25.02.rc0.simg`
 
