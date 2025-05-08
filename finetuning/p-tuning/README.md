@@ -10,10 +10,6 @@ Fine-tuning is executed on a SLURM-managed multi-node GPU cluster using a Singul
 
 [P-Tuning v2 (Li et al., 2021)](https://arxiv.org/abs/2103.10385) is a parameter-efficient fine-tuning (PEFT) technique that prepends learnable prefix tokens to the input embeddings of a pretrained language model. Instead of updating all model weights, it only tunes a small set of prefix parameters, enabling faster training and reduced memory usage.
 
-![P-Tuning Diagram](https://nvidia.github.io/NeMo/_images/peft_prefix_tuning.png)
-
-*Illustration from NVIDIA NeMo: P-Tuning applies learnable tokens to condition model behavior with minimal weight updates.*
-
 NeMo implements this approach using the `model.peft.peft_scheme=ptuning` option. For more, see the [NeMo PEFT documentation](https://docs.nvidia.com/deeplearning/nemo/user-guide/docs/en/stable/nlp/peft/intro.html).
 
 ---
