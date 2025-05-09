@@ -60,7 +60,7 @@ NeMo provides a variety of workflows for different tasks, including: Data Curati
 
 | Type       | Workflow Name                                                                  | Model       | Dataset   |
 |------------|--------------------------------------------------------------------------------|-------------|-----------|
-| Full       | [dpo_llama3-8b](RL/DPO/llama3-8b)   | LLaMA3-8B  | email response  |
+| DPO      | [dpo_llama3-8b](RL/DPO/llama3-8b)   | LLaMA3-8B  | email response  |
 
 
 ## Available Singularity Images
