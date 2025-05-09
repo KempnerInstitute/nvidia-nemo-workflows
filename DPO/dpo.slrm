@@ -1,0 +1,106 @@
+#!/bin/bash
+#SBATCH --job-name="dpo"     # a name for your job
+#SBATCH --partition=<partition-name>   # partition to which job should be submitted
+#SBATCH --account=<account-name> 
+#SBATCH --nodes=1                                 # node count
+#SBATCH --ntasks-per-node=1                                # total number of tasks across all nodes
+#SBATCH --gpus-per-node=1                      # Number of GPUs per node (4 per node)
+#SBATCH --cpus-per-task=16
+#SBATCH --time=01:12:00                           # total run time limit (HH:MM:SS)
+#SBATCH --mem=64GB                               # All memory on the node
+#SBATCH --output %x_%N_%j.out           # Output file
+#SBATCH --error %x_%N_%j.out             # Error file
+
+
+export GPUS_NODE=$SLURM_NTASKS_PER_NODE
+export NNODES=$SLURM_NNODES
+export SCHEME="lora"
+export TP_SIZE=1
+export PP_SIZE=1
+
+nodes=( $( scontrol show hostnames $SLURM_JOB_NODELIST ) )
+nodes_array=($nodes)
+head_node=${nodes_array[0]}
+head_node_ip=$(srun --nodes=1 --ntasks=1 -w "$head_node" hostname --ip-address)
+
+for head_port in {20000..40000}; do ! nc -z localhost ${myport} && break; done
+echo $head_port
+
+
+export MASTER_ADDR=$head_node_ip
+export MASTER_PORT=$head_port
+
+echo $MASTER_ADDR $MASTER_PORT
+
+
+MODEL="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo_files/model/llama-3-8b-instruct-nemo_v1.0/8b_instruct_nemo_bf16.nemo"
+TRAIN_DS="[/n/holylfs06/LABS/kempner_shared/Everyone/workflow/nemo/dpo/buybuy_emails/dpo_response_samples_train_640.jsonl]"
+TEST_DS="[/n/holylfs06/LABS/kempner_shared/Everyone/workflow/nemo/dpo/buybuy_emails/dpo_response_samples_test_80.jsonl]"
+VALID_DS="[/n/holylfs06/LABS/kempner_shared/Everyone/workflow/nemo/dpo/buybuy_emails/dpo_response_samples_val_80.jsonl]"
+VALID_NAMES="ndatabricks-dolly-15k"
+OUTPUT_DIR="./dpo-output-test"
+
+
+CONCAT_SAMPLING_PROBS="[1]"
+echo $NNODES $GPUS_NODE
+
+read -r -d '' cmd <<EOF
+   python /opt/NeMo-Aligner/examples/nlp/gpt/train_gpt_dpo.py \
+   trainer.devices=${GPUS_NODE} \
+   trainer.num_nodes=${NNODES} \
+   ++model.micro_batch_size=1 \
+   ++model.global_batch_size=8 \
+   model.peft.peft_scheme=${SCHEME} \
+   pretrained_checkpoint.restore_from_path=${MODEL} \
+   +model.data.data_prefix.train=$TRAIN_DS \
+   +model.data.data_prefix.validation=$VALID_DS \
+   +model.data.data_prefix.test=$TEST_DS \
+   exp_manager.exp_dir=${OUTPUT_DIR} \
+   exp_manager.explicit_log_dir=${OUTPUT_DIR} 
+   ++trainer.dpo.max_epochs=2 \
+   trainer.precision=bf16-mixed \
+   ++model.micro_batch_size=1 \
+   ++model.global_batch_size=32 \
+   ++model.peft.peft_scheme="lora" \
+   ++model.peft.lora_tuning.alpha=32 \
+   ++model.tensor_model_parallel_size=1 \
+   ++model.pipeline_model_parallel_size=1 \
+   ++trainer.dpo.max_epochs=1 \
+   ++trainer.dpo.max_steps=50 \
+   ++model.dpo.ref_policy_kl_penalty=0.1 \
+   ++model.dist_ckpt_load_strictness=log_all \
+   ++model.optim.name="fused_adam" \
+   ++model.optim.lr=1e-4 \
+   ++model.optim.weight_decay=0.01 \
+   ++model.optim.betas=[0.9,0.98] \
+   ++model.optim.sched.name="CosineAnnealing" \
+   ++model.optim.sched.warmup_steps=1 \
+   ++model.optim.sched.constant_steps=0 \
+   ++model.optim.sched.min_lr=0.0 \
+   ++model.optim.sched.monitor="val_loss" \
+   ++model.optim.sched.reduce_on_plateau="false" \
+   ~model.optim.bucket_cap_mb \
+   ~model.optim.overlap_grad_sync \
+   ~model.optim.overlap_param_sync \
+   ~model.optim.contiguous_grad_buffer \
+
+EOF
+
+echo $cmd
+
+env 
+echo "=================== Launching JoB ================="
+
+export SINGULARITY_BIND="/etc/nsswitch.conf,/etc/slurm,/lib64/libnss_sss.so.2:/lib/libnss_sss.so.2,/var/run/munge:/run/munge,/slurm,/usr/bin/sacct,/usr/bin/salloc,/usr/bin/sbatch,/usr/bin/scancel,/usr/bin/scontrol,/usr/bin/scrontab,/usr/bin/seff,/usr/bin/sinfo,/usr/bin/squeue,/usr/bin/srun,/usr/bin/sshare,/usr/bin/sstat,/usr/bin/strace,/usr/lib64/libmunge.so.2,/usr/lib64/slurm,/var/lib/sss,/etc/pki/ca-trust/extracted/pem/,/sys,/etc/ssl/certs/,/usr/lib64/pmix,"
+
+export OMPI_DIR=/opt/ompi
+export SINGULARITY_OMPI_DIR=$OMPI_DIR
+export SINGULARITYENV_APPEND_PATH=$OMPI_DIR/bin
+export SINGULAIRTYENV_APPEND_LD_LIBRARY_PATH=$OMPI_DIR/lib
+
+
+container_file="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo-25.02.rc0.simg"
+srun singularity run --nv $container_file $cmd 
+
+echo "=================== Finished JoB ================="
+
