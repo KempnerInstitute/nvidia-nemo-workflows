@@ -37,8 +37,7 @@ MODEL="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/
 TRAIN_DS="[/n/holylfs06/LABS/kempner_shared/Everyone/workflow/nemo/dpo/buybuy_emails/dpo_response_samples_train_640.jsonl]"
 TEST_DS="[/n/holylfs06/LABS/kempner_shared/Everyone/workflow/nemo/dpo/buybuy_emails/dpo_response_samples_test_80.jsonl]"
 VALID_DS="[/n/holylfs06/LABS/kempner_shared/Everyone/workflow/nemo/dpo/buybuy_emails/dpo_response_samples_val_80.jsonl]"
-VALID_NAMES="ndatabricks-dolly-15k"
-OUTPUT_DIR="./dpo-output-test"
+OUTPUT_DIR="./dpo-output"
 
 
 CONCAT_SAMPLING_PROBS="[1]"
