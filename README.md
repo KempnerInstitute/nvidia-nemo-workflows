@@ -55,11 +55,13 @@ NeMo provides a variety of workflows for different tasks, including: Data Curati
 | P-Tuning   | [ptuning_llama3-70b_dolly15k](finetuning/p-tuning/ptuning_llama3-70b_dolly15k) | LLaMA3-70B  | dolly15k  |
 | P-Tuning   | [ptuning_llama3-8b_dolly15k](finetuning/p-tuning/ptuning_llama3-8b_dolly15k)   | LLaMA3-8B   | dolly15k  |
 
+
 ### RL
 
 | Type       | Workflow Name                                                                  | Model       | Dataset   |
 |------------|--------------------------------------------------------------------------------|-------------|-----------|
 | Full       | [dpo_llama3-8b](RL/DPO/llama3-8b)   | LLaMA3-8B  | email response  |
+
 
 ## Available Singularity Images
 
