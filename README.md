@@ -35,9 +35,9 @@ NeMo provides a variety of workflows for different tasks, including: Data Curati
 
 ### Pretraining 
 
-| Workflow Name                   | Model                                                              | Dataset     |
-|---------------------------------|--------------------------------------------------------------------|-------------|
-| [gpt2_pretraining_codeparrot](pretraining/gpt2_pretraining_codeparrot) | [Megatron GPT2](https://huggingface.co/nvidia/megatron-gpt2-345m)  | [CodeParrot](https://huggingface.co/codeparrot)  |
+| Method       | Model                                                        | Dataset                                   | Workflow Link                                       |
+|--------------|--------------------------------------------------------------|-------------------------------------------|-----------------------------------------------------|
+| Pretraining  | [Megatron GPT2](https://huggingface.co/nvidia/megatron-gpt2-345m) | [CodeParrot](https://huggingface.co/codeparrot) | [pretraining/gpt2_pretraining_codeparrot](pretraining/gpt2_pretraining_codeparrot) |
 
 
 ### Finetuning
@@ -56,11 +56,13 @@ NeMo provides a variety of workflows for different tasks, including: Data Curati
 |             | LLaMA3-8B   | Dolly15k  |                                  |
 
 
-### RL
+### Reinforcement Learning
 
-| Type       | Workflow Name                                                                  | Model       | Dataset   |
-|------------|--------------------------------------------------------------------------------|-------------|-----------|
-| DPO      | [dpo_llama3-8b](RL/DPO/llama3-8b)   | LLaMA3-8B  | email response  |
+
+| Method      | Model       | Dataset         | Workflow Link                       |
+|-------------|-------------|------------------|-------------------------------------|
+| DPO         | LLaMA3-8B   | email response   | [RL/DPO/llama3-8b](RL/DPO/llama3-8b) |
+
 
 
 ## Available Singularity Images
