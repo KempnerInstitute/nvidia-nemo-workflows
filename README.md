@@ -35,34 +35,33 @@ NeMo provides a variety of workflows for different tasks, including: Data Curati
 
 ### Pretraining 
 
-| Method       | Model                                                        | Dataset                                   | Workflow Link                                       |
-|--------------|--------------------------------------------------------------|-------------------------------------------|-----------------------------------------------------|
+| Method       | Model                                                             | Dataset                                         | Workflow Link                                                                      |
+|--------------|-------------------------------------------------------------------|-------------------------------------------------|------------------------------------------------------------------------------------|
 | Pretraining  | [Megatron GPT2](https://huggingface.co/nvidia/megatron-gpt2-345m) | [CodeParrot](https://huggingface.co/codeparrot) | [pretraining/gpt2_pretraining_codeparrot](pretraining/gpt2_pretraining_codeparrot) |
 
 
 ### Finetuning
 
-| Method      | Model       | Dataset   | Workflow Link                    |
-|-------------|-------------|-----------|----------------------------------|
-| **Full**    | LLaMA3-70B  | Dolly15k  | [finetuning/full](finetuning/full)     |
-|             | LLaMA3-70B  | PubMedQA  |                                  |
-|             | LLaMA3-8B   | Dolly15k  |                                  |
-|             | LLaMA3-8B   | PubMedQA  |                                  |
-| **LoRA**    | LLaMA3-70B  | Dolly15k  | [finetuning/lora](finetuning/lora)     |
-|             | LLaMA3-70B  | PubMedQA  |                                  |
-|             | LLaMA3-8B   | Dolly15k  |                                  |
-|             | LLaMA3-8B   | PubMedQA  |                                  |
-| **P-Tuning**| LLaMA3-70B  | Dolly15k  | [finetuning/p-tuning](finetuning/p-tuning) |
-|             | LLaMA3-8B   | Dolly15k  |                                  |
+| Method       | Model       | Dataset   | Workflow Link                              |
+|------------- |-------------|-----------|--------------------------------------------|
+| **Full**     | LLaMA3-70B  | Dolly15k  | [finetuning/full](finetuning/full)         |
+|              | LLaMA3-70B  | PubMedQA  |                                            |
+|              | LLaMA3-8B   | Dolly15k  |                                            |
+|              | LLaMA3-8B   | PubMedQA  |                                            |
+| **LoRA**     | LLaMA3-70B  | Dolly15k  | [finetuning/lora](finetuning/lora)         |
+|              | LLaMA3-70B  | PubMedQA  |                                            |
+|              | LLaMA3-8B   | Dolly15k  |                                            |
+|              | LLaMA3-8B   | PubMedQA  |                                            |
+| **P-Tuning** | LLaMA3-70B  | Dolly15k  | [finetuning/p-tuning](finetuning/p-tuning) |
+|              | LLaMA3-8B   | Dolly15k  |                                            |
 
 
 ### Reinforcement Learning
 
 
-| Method      | Model       | Dataset         | Workflow Link                       |
-|-------------|-------------|------------------|-------------------------------------|
+| Method      | Model       | Dataset          | Workflow Link                        |
+|-------------|-------------|------------------|--------------------------------------|
 | DPO         | LLaMA3-8B   | email response   | [RL/DPO/llama3-8b](RL/DPO/llama3-8b) |
-
 
 
 ## Available Singularity Images
@@ -82,5 +81,3 @@ Path to the Singularity images on the Kempner cluster:
 
 We document common issues and checks that can be performed to ensure a successful workflow run. These include SSL certificate errors, HuggingFace authentication issues, and gated repository access problems. Please refer to the following section for more details:
 -  [Checks](checks/README.md)
-
-
