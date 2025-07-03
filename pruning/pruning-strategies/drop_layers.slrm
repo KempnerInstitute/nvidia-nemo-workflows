@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name="data-preparation"           # a name for your job
+#SBATCH --job-name="drop_layers"                # a name for your job
 #SBATCH --partition=                            # <---- partition to which job should be submitted
 #SBATCH --account=                              # <---- account to which job should be charged
 #SBATCH --nodes=1                               # node count
