@@ -1,0 +1,41 @@
+#!/bin/bash
+#SBATCH --job-name="data-preparation"           # a name for your job
+#SBATCH --partition=                            # <---- partition to which job should be submitted
+#SBATCH --account=                              # <---- account to which job should be charged
+#SBATCH --nodes=1                               # node count
+#SBATCH --ntasks-per-node=1                     # total number of tasks across all nodes
+#SBATCH --time=01:00:00                         # total run time limit (HH:MM:SS)
+#SBATCH --gpus-per-node=1                       # Number of GPUs per node (4 per node)
+#SBATCH --cpus-per-task=10
+#SBATCH --mem=300G
+#SBATCH --output %x_%N_%j.out                   # Output file
+#SBATCH --error %x_%N_%j.out                    # Error file
+
+input_path=/n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows/data/wikitext-train.jsonl
+output_path=/n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows/data/
+output_prefix=wikitext_tokenized_train
+model_name=meta-llama/Llama-3.1-8B
+
+echo $CMD
+read -r -d '' cmd <<EOF
+python /opt/NeMo/scripts/nlp_language_modeling/preprocess_data_for_megatron.py \
+    --input=$input_path \
+    --tokenizer-library=huggingface \
+    --tokenizer-type=$model_name \
+    --output-prefix=$output_path/$output_prefix \
+    --append-eod \
+    --workers=32
+EOF
+
+echo $cmd
+
+env 
+echo "=================== Launching JoB ================="
+
+container_file="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo_25.04.sif"
+srun singularity run --nv $container_file $cmd 
+
+echo "=================== Finished JoB =================="
+
+
+
