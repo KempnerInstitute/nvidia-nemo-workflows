@@ -11,8 +11,8 @@
 #SBATCH --output %x_%N_%j.out                   # Output file
 #SBATCH --error %x_%N_%j.out                    # Error file
 
-nemo1_path=/n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows/models/llama-3_1-8b-nemo1.nemo
-output_path=/n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows/models/llama-3_1-8b-nemo2
+nemo1_path=
+output_path=
 model_id=meta-llama/Meta-Llama-3-8B
 
 echo $CMD

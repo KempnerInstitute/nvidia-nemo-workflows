@@ -11,9 +11,9 @@
 #SBATCH --output %x_%N_%j.out                   # Output file
 #SBATCH --error %x_%N_%j.out                    # Error file
 
-input_path=/n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows/data/wikitext-train.jsonl
-output_path=/n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows/data/
-output_prefix=wikitext_tokenized_train
+input_path=
+output_path=
+output_prefix=
 model_name=meta-llama/Llama-3.1-8B
 
 echo $CMD

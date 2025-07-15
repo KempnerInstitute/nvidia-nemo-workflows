@@ -33,10 +33,11 @@ echo $MASTER_ADDR $MASTER_PORT
 echo "WORLD_SIZE=$world_size"
 
 
-nemo2_path=/n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows/models/llama-3_1-8b-nemo2.nemo
-output_model_path=/n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows/models/pruned-llama-3_1-8b-depth-pruning
-output_index_mapping_path=/n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows/models/index-mapping/pruned-llama-3_1-8b-depth-pruning
-data_path=/n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows/data/wikitext_tokenized_train_text_document
+# Importance estimation visualization saved to pruned_layers.png
+nemo2_path=
+output_model_path=
+output_index_mapping_path=
+data_path=
 seq_length=8192
 target_num_layers=16
 
@@ -60,6 +61,9 @@ env
 echo "=================== Launching JoB ================="
 
 container_file="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo_25.04.sif"
-srun singularity run --nv $container_file $cmd 
+srun singularity run --nv \
+        --bind pruning/modified-container-files/search_space_modified.py:/usr/local/lib/python3.12/dist-packages/modelopt/torch/nas/search_space.py \
+        --bind pruning/modified-container-files/megatron-modified.py:/usr/local/lib/python3.12/dist-packages/modelopt/torch/nas/plugins/megatron.py \
+        $container_file $cmd 
 
 echo "=================== Finished JoB =================="
