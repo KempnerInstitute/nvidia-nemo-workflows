@@ -8,7 +8,7 @@ The pruning process runs on a SLURM-managed GPU cluster using a Singularity cont
 
 ## Objective
 
-Pruning involes reducing the size of a model by removing neurons deemed less important based on importance estimation metrics.
+Pruning involves reducing the size of a model by removing neurons deemed less important based on importance estimation metrics.
 
 Four pruning strategies are provided: drop layers, depth pruning, width pruning, and width-depth pruning.
 
