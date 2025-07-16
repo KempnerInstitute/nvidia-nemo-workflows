@@ -3,9 +3,9 @@
 #SBATCH --partition=                            # <---- partition to which job should be submitted
 #SBATCH --account=                              # <---- account to which job should be charged
 #SBATCH --nodes=1                               # node count
-#SBATCH --ntasks-per-node=4                     # total number of tasks across all nodes
+#SBATCH --ntasks-per-node=1                     # total number of tasks across all nodes
 #SBATCH --time=01:00:00                         # total run time limit (HH:MM:SS)
-#SBATCH --gpus-per-node=4                       # Number of GPUs per node (4 per node)
+#SBATCH --gpus-per-node=1                       # Number of GPUs per node (4 per node)
 #SBATCH --cpus-per-task=10
 #SBATCH --mem=320G
 #SBATCH --output %x_%N_%j.out                   # Output file
@@ -14,7 +14,7 @@
 export GPUS_NODE=$SLURM_GPUS_PER_NODE
 export NNODES=$SLURM_NNODES
 export TP_SIZE=1
-export PP_SIZE=4
+export PP_SIZE=1
 
 nodes=( $( scontrol show hostnames $SLURM_JOB_NODELIST ) )
 nodes_array=($nodes)
