@@ -105,7 +105,7 @@ class SearchSpace(DynamicSpace):
 
                 .. note::
 
-                    Later matches take precedence over earlier ones when a dict with wilcards is
+                    Later matches take precedence over earlier ones when a dict with wildcards is
                     provided.
 
         Returns:
