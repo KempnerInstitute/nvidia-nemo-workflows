@@ -17,6 +17,7 @@ output_prefix=
 model_name=meta-llama/Llama-3.1-8B
 n_workers=10
 
+
 echo $CMD
 read -r -d '' cmd <<EOF
 python /opt/NeMo/scripts/nlp_language_modeling/preprocess_data_for_megatron.py \
