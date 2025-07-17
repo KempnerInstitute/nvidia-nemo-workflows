@@ -19,7 +19,7 @@ echo $CMD
 read -r -d '' cmd <<EOF
 python /opt/NeMo/scripts/checkpoint_converters/convert_nemo1_to_nemo2.py \
         --input_path=$nemo1_path \
-        --output_path=$output_path.nemo \
+        --output_path=$output_path \
         --model_id=$model_id
 EOF
 
