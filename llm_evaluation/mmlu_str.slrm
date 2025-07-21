@@ -1,0 +1,43 @@
+#!/bin/bash
+#SBATCH --job-name="eval-mmlu-evaluation"       # a name for your job
+#SBATCH --partition=                            # <---- partition to which job should be submitted
+#SBATCH --account=                              # <---- account to which job should be charged
+#SBATCH --nodes=1                               # node count
+#SBATCH --ntasks-per-node=1                     # total number of tasks across all nodes
+#SBATCH --time=05:00:00                         # total run time limit (HH:MM:SS)
+#SBATCH --gpus-per-node=1                       # Number of GPUs per node (4 per node)
+#SBATCH --cpus-per-task=10
+#SBATCH --mem=320G
+#SBATCH --output %x_%N_%j.out                   # Output file
+#SBATCH --error %x_%N_%j.out                    # Error file
+
+output_path=results
+eval_task=mmlu_str
+num_fewshot=5
+endpoint_type=completions # completions or chat/completions
+model=local-completions # local-completions or local-chat-completions
+triton_http_address=
+fastapi_port=8080 
+
+
+echo $CMD
+read -r -d '' cmd <<EOF
+lm-eval 
+    --tasks $eval_task \
+    --num_fewshot $num_fewshot \
+    --model $model \
+    --model_args "base_url=http://$triton_http_address:$fastapi_port/v1/$endpoint_type/,model=triton_model,tokenized_requests=false,,tokenizer_backend=None,num_concurrent=1,timeout=30,max_retries=5,stream=False" \
+    --log_samples \
+    --output_path $output_path \
+    --use_cache $output_path/lm_cache \    
+    --trust_remote_code \  
+    --gen_kwargs="temperature=1e-07,top_p=0.9999999" 
+EOF
+
+env 
+echo "=================== Launching JoB ================="
+
+container_file="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo_25.04.sif"
+srun singularity run --nv $container_file $cmd 
+
+echo "=================== Finished JoB =================="

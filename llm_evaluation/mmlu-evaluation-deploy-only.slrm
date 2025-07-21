@@ -1,0 +1,63 @@
+#!/bin/bash
+#SBATCH --job-name="deploy-mmlu-evaluation"     # a name for your job
+#SBATCH --partition=                            # <---- partition to which job should be submitted
+#SBATCH --account=                              # <---- account to which job should be charged
+#SBATCH --nodes=1                               # node count
+#SBATCH --ntasks-per-node=1                     # total number of tasks across all nodes
+#SBATCH --time=05:00:00                         # total run time limit (HH:MM:SS)
+#SBATCH --gpus-per-node=1                       # Number of GPUs per node (4 per node)
+#SBATCH --cpus-per-task=10
+#SBATCH --mem=320G
+#SBATCH --output %x_%N_%j.out                   # Output file
+#SBATCH --error %x_%N_%j.out                    # Error file
+
+export GPUS_NODE=$SLURM_GPUS_PER_NODE
+export NNODES=$SLURM_NNODES
+export TP_SIZE=1
+export PP_SIZE=1
+
+nodes=( $( scontrol show hostnames $SLURM_JOB_NODELIST ) )
+nodes_array=($nodes)
+head_node=${nodes_array[0]}
+head_node_ip=$(srun --nodes=1 --ntasks=1 -w "$head_node" hostname --ip-address)
+
+for head_port in {20000..30000}; do ! nc -z localhost ${head_port} && break; done
+echo $head_port
+
+export MASTER_ADDR=$head_node_ip
+export MASTER_PORT=$head_port
+world_size=$(($SLURM_NNODES * $SLURM_NTASKS_PER_NODE))
+export WORLD_SIZE=$world_size
+
+echo $MASTER_ADDR $MASTER_PORT
+echo "WORLD_SIZE=$world_size"
+
+
+nemo_path=/n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows-clean/nvidia-nemo-workflows/models/llama3.1-8b_nemo2
+eval_task=mmlu
+endpoint_type=completions 
+max_input_len=8192
+
+echo $CMD
+read -r -d '' cmd <<EOF
+torchrun --nproc_per_node=$GPUS_NODE /opt/NeMo/scripts/llm/evaluation.py \
+    --nemo_checkpoint $nemo_path \
+    --eval_task $eval_task \
+    --endpoint_type $endpoint_type \
+    --nodes $NNODES \
+    --devices $GPUS_NODE \
+    --tensor_parallelism_size $TP_SIZE \
+    --pipeline_parallelism_size $PP_SIZE \
+    --max_input_len $max_input_len
+EOF
+
+env 
+echo "=================== Launching JoB ================="
+
+container_file="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo_25.04.sif"
+
+srun singularity run --nv \
+    --bind /n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows-clean/nvidia-nemo-workflows/llm_evaluation/modified-container-files/deployment.py:/opt/NeMo/scripts/llm/evaluation.py \
+    $container_file $cmd
+
+echo "=================== Finished JoB =================="
