@@ -154,7 +154,12 @@ class SearchSpace(DynamicSpace):
             self._visualize(torch.cuda.current_device(), name, importance)
 
             # compute order from importance and enforce it
-            order = torch.argsort(importance, descending=True)
+            order = torch.argsort(importance, descending=True) # Original is True
+
+            # Rotate so that the ith highest is at the top
+            # pivot = -2  # ith highest from the end
+            # order = torch.cat([order[pivot:], order[:pivot]])
+
             hp.enforce_order(order)
 
         # now that we have enforced an order we can force reassign all parameters/buffers!
@@ -187,37 +192,77 @@ class SearchSpace(DynamicSpace):
 
         print("{:-^100}".format(""))
 
-    
+
     def _visualize(self, device_id, layer_name, importance, save_dir="plots"):
         layer_number = self._get_layer_number(layer_name)
         name = self._get_clean_name(layer_name)
-        importance_cpu = importance.cpu() 
+        importance_cpu = importance.cpu()
 
-        plt.figure(figsize=(10, 5))
-        plt.bar(range(len(importance_cpu)), importance_cpu.numpy())
-
-        if layer_number is not None:
-            title = f"Layer {layer_number}-{name} Importance"
-        else:
-            title = f"{name} Importance"
-        plt.title(title)
-        plt.xlabel(name)
-        plt.ylabel("Importance Score")
-        plt.grid(True)
-
-        # Create directory with cuda device subfolder
         device_dir = os.path.join(save_dir, f"cuda{device_id}")
         os.makedirs(device_dir, exist_ok=True)
 
-        # Format filename with lowercase and spaces to underscores
-        filename = title.lower().replace(" ", "_") + ".png"
-        filepath = os.path.join(device_dir, filename)
+        base_title = f"Layer {layer_number}-{name}" if layer_number is not None else name
+        base_filename = base_title.lower().replace(" ", "_")
 
-        plt.savefig(filepath)
+        # BAR PLOT
+        bar_title = f"{base_title} Importance"
+        bar_filename = f"{base_filename}_importance.png"
+        bar_filepath = os.path.join(device_dir, bar_filename)
+        count = 1
+        while os.path.exists(bar_filepath):
+            bar_filename = f"{base_filename}_importance_{count}.png"
+            bar_filepath = os.path.join(device_dir, bar_filename)
+            count += 1
+
+        plt.figure(figsize=(10, 5))
+        plt.bar(range(len(importance_cpu)), importance_cpu.numpy(), width=1.6)
+        plt.title(bar_title)
+        plt.xlabel(name)
+        plt.ylabel("Importance Score")
+        plt.grid(True)
+        if name == "Neuron":
+            ymax = importance_cpu.max().item() + 0.0001
+            plt.ylim(0, ymax)
+        plt.savefig(bar_filepath)
         plt.close()
-        print(f"Saved plot to {filepath}")
+        print(f"Saved plot to {bar_filepath}")
 
-        
+        # HISTOGRAM
+        hist_title = f"{base_title} Importance Histogram"
+        hist_filename = f"{base_filename}_importance_hist.png"
+        hist_filepath = os.path.join(device_dir, hist_filename)
+        count = 1
+        while os.path.exists(hist_filepath):
+            hist_filename = f"{base_filename}_importance_hist_{count}.png"
+            hist_filepath = os.path.join(device_dir, hist_filename)
+            count += 1
+
+        plt.figure(figsize=(10, 5))
+        plt.hist(importance_cpu.numpy(), bins=1000, alpha=0.8, color='skyblue', edgecolor='black')
+        plt.title(hist_title)
+        plt.xlabel("Importance Score")
+        plt.ylabel("Frequency")
+        plt.grid(True)
+        if name == "Neuron":
+            plt.xlim(0, 0.2)
+        plt.savefig(hist_filepath)
+        plt.close()
+        print(f"Saved histogram to {hist_filepath}")
+
+        # TOP-K TEXT FILE
+        txt_filename = bar_filename.replace(".png", ".txt")
+        txt_filepath = os.path.join(device_dir, txt_filename)
+        topk = min(4000, importance_cpu.numel())
+        top_values, top_indices = torch.topk(importance_cpu, topk)
+
+        with open(txt_filepath, "w") as f:
+            f.write(f"Top {topk} Importance Scores for {base_title}\n")
+            f.write("=" * 20 + "\n")
+            for i in range(topk):
+                f.write(f"Neuron {top_indices[i].item()}: {top_values[i].item():.6f}\n")
+        print(f"Saved top-{topk} importance values to {txt_filepath}")
+
+
     def _get_layer_number(self, name: str) -> int | None:
         parts = name.split('.')
         if "layers" in parts:
