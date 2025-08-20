@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --job-name="validation-loss"            # a name for your job
+#SBATCH --job-name="deploy-mmlu-evaluation"     # a name for your job
 #SBATCH --partition=                            # <---- partition to which job should be submitted
 #SBATCH --account=                              # <---- account to which job should be charged
 #SBATCH --nodes=1                               # node count
 #SBATCH --ntasks-per-node=1                     # total number of tasks across all nodes
-#SBATCH --time=00:30:00                         # total run time limit (HH:MM:SS)
+#SBATCH --time=05:00:00                         # total run time limit (HH:MM:SS)
 #SBATCH --gpus-per-node=1                       # Number of GPUs per node (4 per node)
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=10
 #SBATCH --mem=320G
 #SBATCH --output %x_%N_%j.out                   # Output file
 #SBATCH --error %x_%N_%j.out                    # Error file
@@ -34,36 +34,30 @@ echo "WORLD_SIZE=$world_size"
 
 
 nemo_path=
-data_path=
-
-export seq_length=1024
-export global_batch_size=4
-export micro_batch_size=4
-
-export NUM_NODES=1
-export DEVICES_PER_NODE=1
-export NPROC_PER_NODE=$(($TP_SIZE * $PP_SIZE))
+eval_task=mmlu
+endpoint_type=completions 
+max_input_len=8192
 
 echo $CMD
 read -r -d '' cmd <<EOF
-torchrun --nproc_per_node $GPUS_NODE llm_evaluation/validation-loss.py \
-    --model_path $nemo_path \
-    --val_data $data_path
-    --tp_size $TP_SIZE \
-    --pp_size $PP_SIZE \
-    --devices $DEVICES_PER_NODE \
-    --num_nodes $NUM_NODES \
-    --gbs $global_batch_size \
-    --mbs $micro_batch_size \
-    --seq_length $seq_length
+torchrun --nproc_per_node=$GPUS_NODE /opt/NeMo/scripts/llm/evaluation.py \
+    --nemo_checkpoint $nemo_path \
+    --eval_task $eval_task \
+    --endpoint_type $endpoint_type \
+    --nodes $NNODES \
+    --devices $GPUS_NODE \
+    --tensor_parallelism_size $TP_SIZE \
+    --pipeline_parallelism_size $PP_SIZE \
+    --max_input_len $max_input_len
 EOF
-
-echo $cmd
 
 env 
 echo "=================== Launching JoB ================="
 
 container_file="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo_25.04.sif"
-srun singularity run --nv $container_file $cmd 
+
+srun singularity run --nv \
+    --bind llm_evaluation/modified-container-files/deployment.py:/opt/NeMo/scripts/llm/evaluation.py \
+    $container_file $cmd
 
 echo "=================== Finished JoB =================="

@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name="deploy-mmlu-evaluation"     # a name for your job
+#SBATCH --job-name="eval-mmlu-evaluation"       # a name for your job
 #SBATCH --partition=                            # <---- partition to which job should be submitted
 #SBATCH --account=                              # <---- account to which job should be charged
 #SBATCH --nodes=1                               # node count
@@ -32,11 +32,16 @@ export WORLD_SIZE=$world_size
 echo $MASTER_ADDR $MASTER_PORT
 echo "WORLD_SIZE=$world_size"
 
+export CURL_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
+export SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
 
-nemo_path=/n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows-clean/nvidia-nemo-workflows/models/llama3.1-8b_nemo2
+
+nemo_path=
 eval_task=mmlu
-endpoint_type=completions 
-max_input_len=8192
+endpoint_type=completions
+triton_http_address=
+fastapi_port=8080
+
 
 echo $CMD
 read -r -d '' cmd <<EOF
@@ -47,17 +52,17 @@ torchrun --nproc_per_node=$GPUS_NODE /opt/NeMo/scripts/llm/evaluation.py \
     --nodes $NNODES \
     --devices $GPUS_NODE \
     --tensor_parallelism_size $TP_SIZE \
-    --pipeline_parallelism_size $PP_SIZE \
-    --max_input_len $max_input_len
+    --pipeline_parallelism_size $PP_SIZE
+    --triton_http_address $triton_http_address \
+    --fastapi_port $fastapi_port
 EOF
 
 env 
 echo "=================== Launching JoB ================="
 
 container_file="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo_25.04.sif"
-
 srun singularity run --nv \
-    --bind /n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows-clean/nvidia-nemo-workflows/llm_evaluation/modified-container-files/deployment.py:/opt/NeMo/scripts/llm/evaluation.py \
-    $container_file $cmd
+    --bind llm_evaluation/modified-container-files/evaluation.py:/opt/NeMo/scripts/llm/evaluation.py \
+    $container_file $cmd 
 
 echo "=================== Finished JoB =================="
