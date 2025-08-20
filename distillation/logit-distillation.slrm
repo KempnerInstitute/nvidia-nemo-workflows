@@ -35,9 +35,9 @@ echo $MASTER_ADDR $MASTER_PORT
 echo "WORLD_SIZE=$world_size"
 
 
-student_nemo_path="/n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows-clean/nvidia-nemo-workflows/models/llama3.1-8b_nemo2"
-teacher_nemo_path="/n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows-clean/nvidia-nemo-workflows/models/llama3.1-8b_nemo2"
-data_path="/n/holylfs06/LABS/kempner_undergrads/Lab/acherilyn/nvidia-nemo-workflows/data/wikitext_tokenized_test_text_document"
+student_nemo_path=
+teacher_nemo_path=
+data_path=
 tokenizer_library=huggingface
 model_id=meta-llama/Llama-3.1-8B
 
@@ -71,7 +71,9 @@ torchrun --nproc_per_node=$NPROC_PER_NODE /opt/NeMo/scripts/llm/gpt_distillation
     --gbs $GLOBAL_BATCHSIZE \
     --mbs $MICRO_BATCHSIZE \
     --data_paths 1.0 $data_path \
-    --seq_length $seq_length
+    --seq_length $seq_length \
+    --val_check_interval 1000 \
+    --limit_val_batches 8 
 EOF
 
 echo $cmd
