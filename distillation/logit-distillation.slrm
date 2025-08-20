@@ -83,7 +83,6 @@ echo "=================== Launching JoB ================="
 
 container_file="/n/holylfs06/LABS/kempner_shared/Everyone/containers/mlperf_benchmarking/nemo_25.04.sif"
 srun singularity run --nv \
-    --bind distillation/modified-container-files/gpt_distillation.py:/opt/NeMo/scripts/llm/gpt_distillation.py \
     $container_file $cmd 
 
 echo "=================== Finished JoB =================="
