@@ -19,7 +19,7 @@ This directory includes SLURM job scripts for the following evaluation tools:
 
 <br/>
 
-The MMLU evaluation benchmark through NeMo supports model parallelism and can be configured to support the following tasks:
+The MMLU evaluation benchmark through NeMo supports can be configured to support the following tasks:
 ```python
 COMPLETIONS_TASKS = (
     "gsm8k",
