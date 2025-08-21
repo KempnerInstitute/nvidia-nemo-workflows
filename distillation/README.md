@@ -16,7 +16,7 @@ This setup uses NVIDIA NeMo’s native support for distillation of large languag
 
 ##  Requirements
 
-  - Pretrained NeMo LLaMA3.1-8B model (`llama3.1-8b.nemo`)
+  - Pretrained NeMo 2.0 LLaMA3.1-8B model (`llama3.1-8b`)
   - Pruned NeMo LLaMA3.1-8B model
   - Tokenized wikitext dataset
   - NeMo Singularity image (`nemo-25.04.sif`)
