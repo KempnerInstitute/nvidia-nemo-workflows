@@ -36,7 +36,6 @@ export CURL_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
 export SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
 
 
-nemo_path=
 eval_task=mmlu
 endpoint_type=completions
 triton_http_address=
@@ -45,14 +44,9 @@ fastapi_port=8080
 
 echo $CMD
 read -r -d '' cmd <<EOF
-torchrun --nproc_per_node=$GPUS_NODE /opt/NeMo/scripts/llm/evaluation.py \
-    --nemo_checkpoint $nemo_path \
+torchrun --nproc_per_node=$GPUS_NODE --rdzv_endpoint=$MASTER_ADDR:$MASTER_PORT /opt/NeMo/scripts/llm/evaluation.py \
     --eval_task $eval_task \
     --endpoint_type $endpoint_type \
-    --nodes $NNODES \
-    --devices $GPUS_NODE \
-    --tensor_parallelism_size $TP_SIZE \
-    --pipeline_parallelism_size $PP_SIZE
     --triton_http_address $triton_http_address \
     --fastapi_port $fastapi_port
 EOF

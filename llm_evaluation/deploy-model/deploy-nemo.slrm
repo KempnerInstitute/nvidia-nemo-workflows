@@ -34,16 +34,12 @@ echo "WORLD_SIZE=$world_size"
 
 
 nemo_path=
-eval_task=mmlu
-endpoint_type=completions 
 max_input_len=8192
 
 echo $CMD
 read -r -d '' cmd <<EOF
 torchrun --nproc_per_node=$GPUS_NODE /opt/NeMo/scripts/llm/evaluation.py \
     --nemo_checkpoint $nemo_path \
-    --eval_task $eval_task \
-    --endpoint_type $endpoint_type \
     --nodes $NNODES \
     --devices $GPUS_NODE \
     --tensor_parallelism_size $TP_SIZE \
